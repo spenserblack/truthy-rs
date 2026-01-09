@@ -14,7 +14,7 @@ let choice: String = get_user_input();
 // choice if it's falsy (empty string).
 let choice = choice.or(String::from("default choice"));
 
-// Decrements n by 1 if n >= 0;
+// Decrements n by 1 if n > 0;
 let mut n = get_u8();
 n.and_then_eq(|n| n - 1);
 ```
