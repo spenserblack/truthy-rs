@@ -7,6 +7,12 @@
 //!
 //! assert!("".falsy());
 //! assert!(1usize.truthy());
+//!
+//! let mut count = 0u8;
+//! assert_eq!(0, count.and_then(|n| n - 1));
+//! count.or_eq(2);
+//! count.and_then_eq(|n| *n - 1);
+//! assert_eq!(1, count);
 //! ```
 
 /// Checks if a value is truthy. This usually means that the value is non-zero and
