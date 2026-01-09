@@ -1,37 +1,16 @@
 [package]
 name = "truthy"
-version = "1.1.0"
-authors = ["Spenser Black <spenserblack01@gmail.com>"]
-edition = "2018"
+version = "2.0.0"
+edition = "2024"
 license = "MIT OR Apache-2.0"
 description = "Check if a value is \"truthy\""
 readme = "README.md"
 keywords = ["bool", "boolean", "truthy"]
 categories = []
-repository = "https://github.com/spenserblack/truthy"
+repository = "https://github.com/spenserblack/truthy-rs"
 exclude = [
-    ".travis.yml",
     ".editorconfig",
     ".github/*",
     ".gitignore",
     "CHANGELOG.md",
 ]
-
-[package.metadata.docs.rs]
-all-features = true
-
-[features]
-default = []
-and-or = ["either"]
-
-[dependencies]
-either = { version = "1", optional = true }
-
-[[example]]
-name = "and_or"
-required-features = ["and-or"]
-
-[badges]
-is-it-maintained-issue-resolution = { repository = "spenserblack/truthy" }
-is-it-maintained-open-issues = { repository = "spenserblack/truthy" }
-maintenance = { status = "actively-developed" }
