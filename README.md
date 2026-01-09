@@ -2,7 +2,6 @@
 [![Crates.io](https://img.shields.io/crates/v/truthy)](https://crates.io/crates/truthy)
 [![Docs.rs](https://docs.rs/truthy/badge.svg)](https://docs.rs/truthy)
 ![Crates.io](https://img.shields.io/crates/d/truthy)
-[![Build Status](https://travis-ci.com/spenserblack/truthy.svg?branch=master)](https://travis-ci.com/spenserblack/truthy)
 
 Check if a value is "truthy"
 
