@@ -20,6 +20,72 @@ pub trait Truthy {
     fn falsy(&self) -> bool {
         !self.truthy()
     }
+
+    /// Returns `self` if `self` is truthy, or returns `default`.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use truthy::Truthy;
+    /// assert_eq!("default", "".or("default"));
+    /// assert_eq!("foo", "foo".or("default"));
+    /// ```
+    fn or(self, default: Self) -> Self
+    where
+        Self: Sized,
+    {
+        if self.truthy() { self } else { default }
+    }
+
+    /// Returns `self` if `self` is truthy, or calls `f` and returns the result.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use truthy::Truthy;
+    /// assert_eq!("default", "".or_else(|| "default"));
+    /// assert_eq!("foo", "foo".or_else(|| "default"));
+    /// ```
+    fn or_else<F>(self, f: F) -> Self
+    where
+        Self: Sized,
+        F: FnOnce() -> Self,
+    {
+        if self.truthy() { self } else { f() }
+    }
+
+    /// Returns `self` if `self` is falsy, or returns `replacement`.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use truthy::Truthy;
+    /// assert_eq!("", "".and("replacement"));
+    /// assert_eq!("replacement", "foo".and("replacement"));
+    /// ```
+    fn and(self, replacement: Self) -> Self
+    where
+        Self: Sized,
+    {
+        if self.falsy() { self } else { replacement }
+    }
+
+    /// Returns `self` if `self` is falsy, or calls `f` and returns the result.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use truthy::Truthy;
+    /// assert_eq!(0, 0u8.and_then(|n| n - 1));
+    /// assert_eq!(1, 2u8.and_then(|n| n - 1));
+    /// ```
+    fn and_then<F>(self, f: F) -> Self
+    where
+        Self: Sized,
+        F: FnOnce(Self) -> Self,
+    {
+        if self.falsy() { self } else { f(self) }
+    }
 }
 
 macro_rules! impl_truthy_num {
@@ -306,5 +372,29 @@ mod tests {
         fn falsy() {
             assert!(!(0.0f64).truthy())
         }
+    }
+
+    #[test]
+    fn test_or() {
+        assert_eq!("default", "".or("default"));
+        assert_eq!("original", "original".or("default"));
+    }
+
+    #[test]
+    fn test_or_else() {
+        assert_eq!("default", "".or_else(|| "default"));
+        assert_eq!("original", "original".or_else(|| "default"));
+    }
+
+    #[test]
+    fn test_and() {
+        assert_eq!(0, 0u8.and(2));
+        assert_eq!(2, 1u8.and(2));
+    }
+
+    #[test]
+    fn test_and_then() {
+        assert_eq!(0, 0u8.and_then(|n| n - 1));
+        assert_eq!(1, 2u8.and_then(|n| n - 1));
     }
 }

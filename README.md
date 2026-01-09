@@ -5,6 +5,16 @@
 
 Check if a value is "truthy"
 
+## Example
+
+```rust
+let choice: String = get_user_input();
+
+// `choice` is the original choice if it's truthy (non-empty string), or the default
+// choice if it's falsy (empty string).
+let choice = choice.or(String::from("default choice"));
+```
+
 ## Behavior
 
 ```rust
