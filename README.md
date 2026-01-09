@@ -1,7 +1,6 @@
 # truthy
 [![Crates.io](https://img.shields.io/crates/v/truthy)](https://crates.io/crates/truthy)
 [![Docs.rs](https://docs.rs/truthy/badge.svg)](https://docs.rs/truthy)
-![Crates.io](https://img.shields.io/crates/d/truthy)
 
 Check if a value is "truthy"
 
