@@ -37,6 +37,28 @@ pub trait Truthy {
         if self.truthy() { self } else { default }
     }
 
+    /// Does nothing if `self` is truthy, or sets `self` to `default`.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use truthy::Truthy;
+    /// let mut a = "";
+    /// let mut b = "foo";
+    /// a.or_eq("default");
+    /// b.or_eq("default");
+    /// assert_eq!("default", a);
+    /// assert_eq!("foo", b);
+    /// ```
+    fn or_eq(&mut self, default: Self)
+    where
+        Self: Sized,
+    {
+        if self.falsy() {
+            *self = default;
+        }
+    }
+
     /// Returns `self` if `self` is truthy, or calls `f` and returns the result.
     ///
     /// # Example
@@ -52,6 +74,29 @@ pub trait Truthy {
         F: FnOnce() -> Self,
     {
         if self.truthy() { self } else { f() }
+    }
+
+    /// Does nothing `self` is truthy, or calls `f` sets `self` to the result.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use truthy::Truthy;
+    /// let mut a = "";
+    /// let mut b = "foo";
+    /// a.or_else_eq(|| "default");
+    /// b.or_else_eq(|| "default");
+    /// assert_eq!("default", a);
+    /// assert_eq!("foo", b);
+    /// ```
+    fn or_else_eq<F>(&mut self, f: F)
+    where
+        Self: Sized,
+        F: FnOnce() -> Self,
+    {
+        if self.falsy() {
+            *self = f();
+        }
     }
 
     /// Returns `self` if `self` is falsy, or returns `replacement`.
@@ -70,6 +115,28 @@ pub trait Truthy {
         if self.falsy() { self } else { replacement }
     }
 
+    /// Sets `self` to `replacement` if `self` is truthy, otherwise does nothing.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use truthy::Truthy;
+    /// let mut a = "";
+    /// let mut b = "foo";
+    /// a.and_eq("replacement");
+    /// b.and_eq("replacement");
+    /// assert_eq!("", a);
+    /// assert_eq!("replacement", b);
+    /// ```
+    fn and_eq(&mut self, replacement: Self)
+    where
+        Self: Sized,
+    {
+        if self.truthy() {
+            *self = replacement;
+        }
+    }
+
     /// Returns `self` if `self` is falsy, or calls `f` and returns the result.
     ///
     /// # Example
@@ -85,6 +152,29 @@ pub trait Truthy {
         F: FnOnce(Self) -> Self,
     {
         if self.falsy() { self } else { f(self) }
+    }
+
+    /// Calls `f` and sets `self` to the result if `self` is truthy, otherwise does nothing.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// # use truthy::Truthy;
+    /// let mut a = 0u8;
+    /// let mut b = 2u8;
+    /// a.and_then_eq(|n| *n - 1);
+    /// b.and_then_eq(|n| *n - 1);
+    /// assert_eq!(0, a);
+    /// assert_eq!(1, b);
+    /// ```
+    fn and_then_eq<F>(&mut self, f: F)
+    where
+        Self: Sized,
+        F: FnOnce(&Self) -> Self,
+    {
+        if self.truthy() {
+            *self = f(self);
+        }
     }
 }
 
@@ -381,9 +471,29 @@ mod tests {
     }
 
     #[test]
+    fn test_or_eq() {
+        let mut a = "";
+        let mut b = "original";
+        a.or_eq("default");
+        b.or_eq("default");
+        assert_eq!("default", a);
+        assert_eq!("original", b);
+    }
+
+    #[test]
     fn test_or_else() {
         assert_eq!("default", "".or_else(|| "default"));
         assert_eq!("original", "original".or_else(|| "default"));
+    }
+
+    #[test]
+    fn test_or_else_eq() {
+        let mut a = "";
+        let mut b = "original";
+        a.or_else_eq(|| "default");
+        b.or_else_eq(|| "default");
+        assert_eq!("default", a);
+        assert_eq!("original", b);
     }
 
     #[test]
@@ -393,8 +503,28 @@ mod tests {
     }
 
     #[test]
+    fn test_and_eq() {
+        let mut a = 0u8;
+        let mut b = 1u8;
+        a.and_eq(2);
+        b.and_eq(2);
+        assert_eq!(0, a);
+        assert_eq!(2, b);
+    }
+
+    #[test]
     fn test_and_then() {
         assert_eq!(0, 0u8.and_then(|n| n - 1));
         assert_eq!(1, 2u8.and_then(|n| n - 1));
+    }
+
+    #[test]
+    fn test_and_then_eq() {
+        let mut a = 0u8;
+        let mut b = 2u8;
+        a.and_then_eq(|n| *n - 1);
+        b.and_then_eq(|n| *n - 1);
+        assert_eq!(0, a);
+        assert_eq!(1, b);
     }
 }
