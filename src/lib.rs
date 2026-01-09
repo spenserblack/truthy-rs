@@ -82,7 +82,7 @@ pub trait Truthy {
         if self.truthy() { self } else { f() }
     }
 
-    /// Does nothing `self` is truthy, or calls `f` sets `self` to the result.
+    /// Does nothing if `self` is truthy, or calls `f` and sets `self` to the result.
     ///
     /// # Example
     ///
